@@ -4,6 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var recipeRegistMongoBiz = require('../../../mongoBiz/recipeMongoBiz/register/recipeRegisterMongoBiz.js');
+var config = require('../../../server_setting/server_config/dbConfig/mongoConfig.js');
 var nimble = require('nimble');
 
 router.post('/', function(req, res, next) {
@@ -11,7 +12,7 @@ router.post('/', function(req, res, next) {
     var res_cook = {};
     var res_result = false;
     //var url = "http://localhost:3000";
-    var url = 'http://14.63.173.146:3100/rest/photo/download/';
+    var url = config.mongodb.downloadUrl;
     /**
      *  using nimble - using series.
      *  1. 비동기로 yummy, reply 모델 생성.             -   using parallel
