@@ -93,6 +93,7 @@ router.post('/', function(req, res, next) {
                 function(callback){
 
                     for(var i = 0 ; i < cook.steps.length ; i++){
+                        console.log(url);
                         cook.steps[i].photo = url+ cook.steps[i]._id+".png";
                         console.log(cook.steps[i].photo);
                     }
