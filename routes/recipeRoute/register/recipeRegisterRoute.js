@@ -94,6 +94,7 @@ router.post('/', function(req, res, next) {
 
                     for(var i = 0 ; i < cook.steps.length ; i++){
                         cook.steps[i].photo = url+ cook.steps[i]._id+".png";
+                        console.log(cook.steps[i].photo);
                     }
 
                     cook.comple_photo = cook.steps[cook.steps.length-1].photo;
