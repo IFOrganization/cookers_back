@@ -9,6 +9,8 @@ var cooker_mongo = require('../../../mongoBiz/cookerMongoBiz/cookerMongoBiz/cook
 var johayoJwt = require('johayo-jwt');
 var nimble = require('nimble');
 
+var serverConfig = require('../../../server_setting/server_config/serverConfig/serverConfig.js');
+
 var ObjectId = require('mongoose').Types.ObjectId;
 
 
@@ -132,7 +134,8 @@ router.post('/editprofile', johayoJwt.verify, function (req, res, next) {
         });
 
     }else{
-        var url = 'http://14.63.173.146:3100';
+
+        var url = 'http://' + serverConfig.server_ip + ':3100';
         var photo = url+"/rest/photo/download/"+editdata.photo;
         cooker_mongo.editProfile(editdata,photo, function(data){
             res.send(data);
