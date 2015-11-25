@@ -3,6 +3,7 @@
  */
 
 var mongo = require('../../../model/mongoModel.js');
+var config = require('../../../server_setting/server_config/dbConfig/mongoConfig.js');
 var recipeModifyFunc = {};
 var ObjectId = require('mongoose').Types.ObjectId;
 
@@ -32,7 +33,7 @@ recipeModifyFunc.findCook = function(cook_id, call_back){
             throw err;
         else{
 
-            var url = 'http://14.63.173.146:3100/rest/photo/download/'
+            var url = config.mongodb.downloadUrl;
             for(var i in result.steps){
                 result.steps[i].photo = url+ result.steps[i]._id+ ".png";
             }
