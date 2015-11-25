@@ -108,6 +108,17 @@ router.post('/cookSteps/:cookID', function(req, res, next) {
     });
 });
 
+/**
+ * increase hit part
+ */
+router.post('/increasehit/:cookID', function(req, res, next){
+    console.log("~~~  increase hit rest  ~~~");
+
+    cooksBiz.increasecookHit(req.params.cookID, function(data){
+        res.send(data);
+    })
+})
+
 
 
 module.exports = router;

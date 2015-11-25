@@ -106,7 +106,7 @@ cooksFunc.getcookstepbyCookid = function(cook_id, callback){
 cooksFunc.checkmyyummyList = function(checkData, callback){
     console.log("------------------- checkYummy-------------------------");
 
-    console.log(checkData);
+    /*console.log(checkData);*/
 
     var obj_cooker_yummy_id = new ObjectId(checkData.cooker_yummy_id),
         obj_cook_id = new ObjectId(checkData.cook_id);
@@ -308,7 +308,7 @@ cooksFunc.deletereplyData = function(delete_obj, callback){
             if(err){
                 console.log(err + "in calculateyummyRest Func");
             } else {
-                console.log(obj);
+                /*console.log(obj);*/
                 callback();
             }
         })
@@ -502,6 +502,17 @@ cooksFunc.manageZimmy= function(zimmyData, front_callback){
             callback();
         }
     ]);
+}
+
+cooksFunc.increasecookHit = function(cook_id, callback){
+    var obj_cook_id = new ObjectId(cook_id);
+
+    mongo.model.cook.findByIdAndUpdate
+    (
+        obj_cook_id,
+        {
+            $inc: {"hits" : 1}
+        }, callback);
 }
 
 
