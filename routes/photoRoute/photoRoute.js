@@ -18,12 +18,10 @@ router.post('/upload/:cook_id', function(req, res, next) {
                     if (err) {
                         condition = true;
                         console.log("err");
-                    }else{
-                        callback();
                     }
                 });
             }
-
+            callback();
         },
         function(callback){
             if(condition){

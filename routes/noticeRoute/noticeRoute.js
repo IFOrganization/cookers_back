@@ -34,13 +34,11 @@ router.get('/confirm/:notice_id', function(req, res, next) {
     noticeMongoBiz.updateNoticeState(req.params.notice_id, function(data){
         console.log(data);
         if(data.nModified == 1){
-            console.log("aaa")
             res.send({
                 state : 200,
                 state_comment : "success"
             });
         }else{
-            console.log("bbb")
             res.send({
                 state : 500,
                 state_comment : "db update err"

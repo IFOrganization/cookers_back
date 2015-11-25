@@ -60,57 +60,6 @@ noticeFunc.updateNoticeState = function(notice_id, callback){
     });
 
 }
-//noticeFunc.getNoticeGroupByKindCode = function(to, callback){
-//    console.log("Notice Mongo Biz to_id : " + to);
-//
-//    /**
-//     *  using group function
-//     */
-//    mongo.model.notice.aggregate(
-//        {
-//            $group : {
-//                _id : { kind_code : "$kind_code", "cook_id" : "$cook_id"},
-//                count : { $sum : 1 },
-//                from_list : {
-//                    $push : "$from.cooker_id"
-//                },
-//                notice_id_list : {
-//                    $addToSet : "$_id"
-//                },
-//                to_cooker : {
-//                    $first:"$to.cooker_id"
-//                },
-//                represent : {
-//                    $first : "$from.cooker_id"
-//                }
-//            }
-//        },
-//        {
-//            $project : {
-//                _id : 0,
-//                kind_code : "$_id.kind_code",
-//                cook : "$_id.cook_id",
-//                count : 1,
-//                from_list :1,
-//                notice_id_list: 1,
-//                to_cooker : 1,
-//                represent : 1
-//            }
-//        },
-//        function(err, result){
-//            mongo.model.cook.populate(result, {path:'cook', select :'title desc comple_photo'}, function(err, cook_populate_result){
-//                mongo.model.cooker.populate(cook_populate_result, {path : 'to_cooker', select : 'nick_name cooker_photo'}, function (err, to_cooker_populate_result) {
-//                    mongo.model.cooker.populate(to_cooker_populate_result, {path : 'represent',select : 'cooker_photo _id'}, function (err, represent_result) {
-//                        mongo.model.cooker.populate(represent_result, {path :'from_list', select : 'nick_name'}, function(err, from_list_populate_result){
-//                            callback(from_list_populate_result);
-//                        });
-//                    });
-//                });
-//            });
-//        }
-//    );
-//};
-
 
 noticeFunc.notice_insert = function(notice_object, callback){
     var new_notice = new mongo.model.notice({

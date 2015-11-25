@@ -8,9 +8,8 @@ var router = express.Router();
 var cooker_mongo = require('../../../mongoBiz/cookerMongoBiz/cookerMongoBiz/cookermongoBiz.js');
 var johayoJwt = require('johayo-jwt');
 var nimble = require('nimble');
-
+var serverConfig = require('../../../server_setting/server_config/serverConfig/serverConfig.js');
 var ObjectId = require('mongoose').Types.ObjectId;
-
 
 router.get('/profile', johayoJwt.verify, function (req, res, next) {
 
@@ -132,7 +131,8 @@ router.post('/editprofile', johayoJwt.verify, function (req, res, next) {
         });
 
     }else{
-        var url = 'http://14.63.173.146:3100';
+
+        var url = 'http://' + serverConfig.server_ip + ':3100';
         var photo = url+"/rest/photo/download/"+editdata.photo;
         cooker_mongo.editProfile(editdata,photo, function(data){
             res.send(data);
@@ -146,6 +146,5 @@ router.post('/changepwcheck', johayoJwt.verify, function(req,res,next){
         res.send(result);
     })
 });
-
 
 module.exports = router;
