@@ -8,11 +8,8 @@ var router = express.Router();
 var cooker_mongo = require('../../../mongoBiz/cookerMongoBiz/cookerMongoBiz/cookermongoBiz.js');
 var johayoJwt = require('johayo-jwt');
 var nimble = require('nimble');
-
 var serverConfig = require('../../../server_setting/server_config/serverConfig/serverConfig.js');
-
 var ObjectId = require('mongoose').Types.ObjectId;
-
 
 router.get('/profile', johayoJwt.verify, function (req, res, next) {
 
@@ -149,6 +146,5 @@ router.post('/changepwcheck', johayoJwt.verify, function(req,res,next){
         res.send(result);
     })
 });
-
 
 module.exports = router;
