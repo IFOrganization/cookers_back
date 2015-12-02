@@ -42,9 +42,6 @@ router.post('/cookSteps/checkmyYummy', function(req, res, next) {
     console.log("~~~  yummy!! rest  ~~~~");
 
     cooksBiz.checkmyyummyList(req.body, function(data){
-        /*var res_data = {};
-         res_data.refreshedcooksStep = data;*/
-
         res.send(data);
     });
 });
@@ -53,9 +50,6 @@ router.post('/cookSteps/yummy', function(req, res, next) {
     console.log("~~~  yummy!! rest  ~~~~");
 
     cooksBiz.calculateyummyRest(req.body, function(data){
-        /*var res_data = {};
-        res_data.refreshedcooksStep = data;*/
-
         res.send(data);
     });
 });

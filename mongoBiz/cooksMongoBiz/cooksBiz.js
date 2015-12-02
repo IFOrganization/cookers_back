@@ -42,7 +42,7 @@ cooksFunc.getcooksbymyFollowing = function(following_list, callback){
                 if (err) {
                     throw err;
                 } else {
-                    mongo.model.yummy.populate(w_cooker_result, {path: 'yummy', select: 'cooks'}, function (err, yummy_result) {
+                    mongo.model.yummy.populate(w_cooker_result, {path: 'yummy', select: 'cookers'}, function (err, yummy_result) {
                         if (err) {
                             throw err;
                         } else {
@@ -106,8 +106,6 @@ cooksFunc.getcookstepbyCookid = function(cook_id, callback){
 cooksFunc.checkmyyummyList = function(checkData, callback){
     console.log("------------------- checkYummy-------------------------");
 
-    /*console.log(checkData);*/
-
     var obj_cooker_yummy_id = new ObjectId(checkData.cooker_yummy_id),
         obj_cook_id = new ObjectId(checkData.cook_id);
 
@@ -146,7 +144,6 @@ cooksFunc.calculateyummyRest= function(yummyData, front_callback){
         obj_cooker_yummy_id = new ObjectId(yummyData.cooker_yummy_id),
         obj_cook_id = new ObjectId(yummyData.cook_id),
         obj_cooker_id = new ObjectId(yummyData.cooker_id);
-
 
     nimble.series([
         function(callback) {
@@ -308,7 +305,6 @@ cooksFunc.deletereplyData = function(delete_obj, callback){
             if(err){
                 console.log(err + "in calculateyummyRest Func");
             } else {
-                /*console.log(obj);*/
                 callback();
             }
         })
