@@ -107,11 +107,23 @@ searchFunc.getcooklistbytagSearch = function(tag_param, callback){
         if(err){
             throw err;
         } else {
-            mongo.model.cooker.populate(docs, { path: 'w_cooker', select: 'nick_name state_comment cooker_photo'}, function (err, w_cooker_result) {
+            mongo.model.cooker.populate(docs, { path: 'w_cooker', select: 'nick_name cooker_photo'}, function (err, w_cooker_result) {
                 if (err) {
                     throw err;
                 } else {
-                    callback(w_cooker_result);
+                    mongo.model.yummy.populate(w_cooker_result, {path: 'yummy', select: 'cookers'}, function (err, yummy_result) {
+                        if (err) {
+                            throw err;
+                        } else {
+                            mongo.model.reply.populate(yummy_result, {path: 'reply', select: 'cookers'}, function (err, reply_result) {
+                                if (err) {
+                                    throw err;
+                                } else {
+                                    callback(reply_result);
+                                }
+                            })
+                        }
+                    })
                 }
             });
         }
