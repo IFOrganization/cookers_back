@@ -42,7 +42,7 @@ cooksFunc.getcooksbymyFollowing = function(following_list, callback){
                 if (err) {
                     throw err;
                 } else {
-                    mongo.model.yummy.populate(w_cooker_result, {path: 'yummy', select: 'cooks'}, function (err, yummy_result) {
+                    mongo.model.yummy.populate(w_cooker_result, {path: 'yummy', select: 'cookers'}, function (err, yummy_result) {
                         if (err) {
                             throw err;
                         } else {
@@ -106,16 +106,16 @@ cooksFunc.getcookstepbyCookid = function(cook_id, callback){
 cooksFunc.checkmyyummyList = function(checkData, callback){
     console.log("------------------- checkYummy-------------------------");
 
-    console.log(checkData);
-
     var obj_cooker_yummy_id = new ObjectId(checkData.cooker_yummy_id),
         obj_cook_id = new ObjectId(checkData.cook_id);
+
+    console.log(checkData);
 
     mongo.model.yummy.find({
         '_id': obj_cooker_yummy_id,
         //'cooks._id' :  { "$in" : obj_cook_id}
         /*'cooks.0._id' : obj_cook_id*/
-        'cooks.0._id': obj_cook_id
+        'cooks._id': obj_cook_id
     }).exec(function(err, docs){
 
         /**
@@ -140,154 +140,109 @@ cooksFunc.calculateyummyRest= function(yummyData, front_callback){
      * 2. 위의 콜백에서 판별된 결과로 pull / push
      */
 
-    var check;
+
 
     var obj_cook_yummy_id = new ObjectId(yummyData.cook_yummy_id),
         obj_cooker_yummy_id = new ObjectId(yummyData.cooker_yummy_id),
         obj_cook_id = new ObjectId(yummyData.cook_id),
         obj_cooker_id = new ObjectId(yummyData.cooker_id);
 
+    var check = yummyData.check_yummy;
 
-    nimble.series([
-        function(callback) {
-            mongo.model.yummy.find({
-                '_id': obj_cooker_yummy_id,
-                //'cooks._id' :  { "$in" : obj_cook_id}
-                'cooks.0._id' : obj_cook_id
-            }).exec(function(err, docs){
+    if(!check){
+        nimble.parallel([
+            function(callback){
                 /**
-                 * 결과 값이 없으면 undefined
-                 * 해당 cook에서 현재 이 cook이 없음 따라서 push
+                 * cooker객체 기준 cook 배열
+                 * 내 좋아요 목록 뒤지기
                  */
-                if(docs[0] == undefined){
-                    check = false;
-                } else {
-                    check = true;
-                }
-                callback();
-            });
-        },
-        function(callback) {
-            if(!check){
-                nimble.parallel([
-                    function(callback){
-                        /**
-                         * cooker객체 기준 cook 배열
-                         * 내 좋아요 목록 뒤지기
-                         */
-                        mongo.model.yummy.update(
-                            {'_id': obj_cooker_yummy_id},
-                            { $push:
-                            { cooks :
-                                {
-                                    _id : obj_cook_id
-                                }
-                            }
-                            },
-                            {safe: true},
-                            function (err, obj) {
-                                if(err){
-                                    console.log(err + "in calculateyummyRest Func");
-                                } else {
-                                    callback();
-                                }
-                            })
-                    },
-                    function(callback){
-                        /**
-                         * cook객체 기준 cooker 배열
-                         * 해당 쿡에서 사용자 뒤지기
-                         */
-                        mongo.model.yummy.update(
-                            {'_id': obj_cook_yummy_id},
-                            { $push:
-                            { cookers :
-                                {
-                                    _id : obj_cooker_id
-                                }
-                            }
-                            },
-                            {safe: true},
-                            function (err, obj) {
-                                if(err){
-                                    console.log(err + "in calculateyummyRest Func");
-                                } else {
-                                    callback();
-                                }
-                            })
+                mongo.model.yummy.update(
+                    {'_id': obj_cooker_yummy_id},
+                    { $push:
+                    { cooks :
+                    {
+                        _id : obj_cook_id
                     }
-                ])
-
-            } else {
-                nimble.parallel([
-                    function(callback){
-                        mongo.model.yummy.update(
-                            {'_id': obj_cooker_yummy_id},
-                            { $pull:
-                            { cooks :
-                                {
-                                    _id : obj_cook_id
-                                }
-                            }
-                            },
-                            {safe: true},
-                            function (err, obj) {
-                                if(err){
-                                    console.log(err + "in calculateyummyRest Func");
-                                } else {
-                                    callback();
-                                }
-                            })
-                    },
-                    function(callback){
-                        mongo.model.yummy.update(
-                            {'_id': obj_cook_yummy_id},
-                            { $pull:
-                            { cookers :
-                                {
-                                    _id : obj_cooker_id
-                                }
-                            }
-                            },
-                            {safe: true},
-                            function (err, obj) {
-                                if(err){
-                                    console.log(err + "in calculateyummyRest Func");
-                                } else {
-                                    callback();
-                                }
-                            })
                     }
-                ])
+                    },
+                    {safe: true},
+                    function (err, obj) {
+                        if(err){
+                            console.log(err + "in calculateyummyRest Func");
+                        } else {
+                            callback();
+                        }
+                    })
+            },
+            function(callback){
+                /**
+                 * cook객체 기준 cooker 배열
+                 * 해당 쿡에서 사용자 뒤지기
+                 */
+                mongo.model.yummy.update(
+                    {'_id': obj_cook_yummy_id},
+                    { $push:
+                    { cookers :
+                    {
+                        _id : obj_cooker_id
+                    }
+                    }
+                    },
+                    {safe: true},
+                    function (err, obj) {
+                        if(err){
+                            console.log(err + "in calculateyummyRest Func");
+                        } else {
+                            callback();
+                        }
+                    })
             }
-            callback();
-        },
-        function(callback){
-            /**
-             * yummy의 pull / push 가 끝나고 해당 doc 가져옴.
-             */
-            mongo.model.yummy.find({
-                '_id' : obj_cook_yummy_id
-            },{
-                cookers : 1
-            }).exec(function(err, docs){
+        ])
+        front_callback();
 
-                /**
-                 * mongoose에서는 쿼링한 결과에 property를 추가해도 최종 callback결과에는 반영되지 않는다.
-                 * 그 이유는 해당 객체에서 JSON.stringify가 불리고 즉시 toJSON 함수에 의해 JSON객체로 변환되기 떄문이다
-                 * 따라서 개발자가 아무리 변환을 해주어도 마지막 쿼리의 결과 값만 리턴 되는 것이다.
-                 * 해결하기 위한 방법은 find()뒤에 .lean()함수를 추가해주면 된다.
-                 * Read-only일떄 사용!!!
-                 * 검색 링크 : http://ilee.co.uk/mongoose-documents-and-jsonstringify/
-                 * Documents returned from queries with the lean option enabled are plain javascript objects, not MongooseDocuments.
-                 * They have no save method, getters/setters or other Mongoose magic applied.
-                 */
-
-                front_callback(docs[0]);
-                callback();
-            });
-        }
-    ]);
+    } else {
+        nimble.parallel([
+            function(callback){
+                mongo.model.yummy.update(
+                    {'_id': obj_cooker_yummy_id},
+                    { $pull:
+                    { cooks :
+                    {
+                        _id : obj_cook_id
+                    }
+                    }
+                    },
+                    {safe: true},
+                    function (err, obj) {
+                        if(err){
+                            console.log(err + "in calculateyummyRest Func");
+                        } else {
+                            callback();
+                        }
+                    })
+            },
+            function(callback){
+                mongo.model.yummy.update(
+                    {'_id': obj_cook_yummy_id},
+                    { $pull:
+                    { cookers :
+                    {
+                        _id : obj_cooker_id
+                    }
+                    }
+                    },
+                    {safe: true},
+                    function (err, obj) {
+                        if(err){
+                            console.log(err + "in calculateyummyRest Func");
+                        } else {
+                            callback();
+                        }
+                    })
+            }
+        ])
+        front_callback();
+    }
 }
 
 cooksFunc.deletereplyData = function(delete_obj, callback){
@@ -308,7 +263,6 @@ cooksFunc.deletereplyData = function(delete_obj, callback){
             if(err){
                 console.log(err + "in calculateyummyRest Func");
             } else {
-                console.log(obj);
                 callback();
             }
         })
@@ -502,6 +456,17 @@ cooksFunc.manageZimmy= function(zimmyData, front_callback){
             callback();
         }
     ]);
+}
+
+cooksFunc.increasecookHit = function(cook_id, callback){
+    var obj_cook_id = new ObjectId(cook_id);
+
+    mongo.model.cook.findByIdAndUpdate
+    (
+        obj_cook_id,
+        {
+            $inc: {"hits" : 1}
+        }, callback);
 }
 
 
