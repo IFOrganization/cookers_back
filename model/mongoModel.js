@@ -114,6 +114,19 @@ mongo.schema.yummy = new Schema({
 
 });
 
+mongo.schema.suserList = new Schema({
+
+
+    userid : {type: Schema.Types.ObjectId},
+    socketid : String
+
+    /**
+     * state_code
+     *  0 : cooker 단일 객체 cooks Array (내가 누른 좋아요 게시물들)
+     *  1 : cook 단일 객체 cookers Array (이 게시물의 좋아요를 누른 유저들)
+     */
+});
+
 
 mongo.model = {};
 mongo.model.cooker = mongo.mongoose.model('cooker', mongo.schema.cooker);
@@ -122,4 +135,5 @@ mongo.model.notice = mongo.mongoose.model('notice', mongo.schema.notice);
 mongo.model.report = mongo.mongoose.model('report', mongo.schema.report);
 mongo.model.yummy = mongo.mongoose.model('yummy',mongo.schema.yummy);
 mongo.model.reply = mongo.mongoose.model('reply', mongo.schema.reply);
+mongo.model.suserList = mongo.mongoose.model('suserList', mongo.schema.suserList);
 module.exports = mongo;
